@@ -2,7 +2,6 @@ dist
 package-lock.json
 yarn.lock
 .history/
-!./lib/dist/
 
 # Docusaurus
 .docusaurus
@@ -242,3 +241,6 @@ artifacts/
 
 # Navigation mocks
 Mock*
+
+!lib/dist/
+!lib/dist/Mock/

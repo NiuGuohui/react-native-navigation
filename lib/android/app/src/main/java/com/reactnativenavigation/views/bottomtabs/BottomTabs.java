@@ -74,6 +74,13 @@ public class BottomTabs extends AHBottomNavigation {
                     FrameLayout current = (FrameLayout) bottomLayout.getChildAt(a);
                     current.setLayoutParams(
                             new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
+                    current.setPadding(0, current.getPaddingTop(), 0, 0);
+                    // 更改text样式
+                    TextView text = (TextView) current.getChildAt(1);
+                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) text.getLayoutParams();
+                    // 设置边距
+                    lp.bottomMargin = 4;
+                    text.setLayoutParams(lp);
                 }
                 break;
             }

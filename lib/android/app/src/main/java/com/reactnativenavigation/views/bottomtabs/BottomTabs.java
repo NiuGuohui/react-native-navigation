@@ -60,6 +60,23 @@ public class BottomTabs extends AHBottomNavigation {
 
     public void superCreateItems() {
         super.createItems();
+        int count = getChildCount();
+        // 查找Items容器
+        for (int i = count - 1; i >= 0; i--) {
+            View view = getChildAt(i);
+            if (view instanceof LinearLayout) {
+                LinearLayout bottomLayout = (LinearLayout) view;
+                // 对每个Item的layout_weight设置值，使其均分底部空间
+                int childCount = bottomLayout.getChildCount();
+                for (int a = 0; a < childCount; a++) {
+                    FrameLayout current = (FrameLayout) bottomLayout.getChildAt(a);
+                    current.setLayoutParams(
+                        new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+                    );
+                }
+                break;
+            }
+        }
     }
 
     @Override

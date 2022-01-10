@@ -1,20 +1,17 @@
 {
-  "name": "react-native-navigation",
-  "version": "7.24.2",
-  "description": "React Native Navigation - truly native navigation for iOS and Android",
+  "name": "@fuulea/react-native-navigation",
+  "version": "7.24.3",
+  "description": "React Native Navigation - 根据App2.0需求修改",
   "license": "MIT",
   "nativePackage": true,
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "bugs": {
-    "url": "https://github.com/wix/react-native-navigation/issues"
+    "url": "https://github.com/NiuGuohui/react-native-navigation/issues"
   },
-  "homepage": "https://github.com/wix/react-native-navigation",
+  "homepage": "https://github.com/NiuGuohui/react-native-navigation/tree/fuulea",
   "readme": "https://github.com/wix/react-native-navigation#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/react-native-navigation.git"
+    "url": "https://github.com/NiuGuohui/react-native-navigation/tree/fuulea"
   },
   "bin": {
     "rnn-link": "./autolink/postlink/run.js"

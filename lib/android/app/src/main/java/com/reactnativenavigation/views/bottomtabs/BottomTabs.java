@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -46,7 +47,8 @@ public class BottomTabs extends AHBottomNavigation {
 
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
-        if (hasItemsAndIsMeasured(w, h, oldw, oldh)) createItems();
+        if (hasItemsAndIsMeasured(w, h, oldw, oldh))
+            createItems();
     }
 
     @Override
@@ -71,8 +73,7 @@ public class BottomTabs extends AHBottomNavigation {
                 for (int a = 0; a < childCount; a++) {
                     FrameLayout current = (FrameLayout) bottomLayout.getChildAt(a);
                     current.setLayoutParams(
-                        new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-                    );
+                            new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
                 }
                 break;
             }
@@ -92,29 +93,32 @@ public class BottomTabs extends AHBottomNavigation {
             onItemCreationEnabled.add(() -> super.setCurrentItem(position, useCallback));
         }
     }
-    
 
     @Override
     public void setTitleState(TitleState titleState) {
-        if (getTitleState() != titleState) super.setTitleState(titleState);
+        if (getTitleState() != titleState)
+            super.setTitleState(titleState);
     }
 
     @Override
     public void setBackgroundColor(int color) {
         super.setBackgroundColor(color);
-        if (getDefaultBackgroundColor() != color) setDefaultBackgroundColor(color);
+        if (getDefaultBackgroundColor() != color)
+            setDefaultBackgroundColor(color);
     }
 
     @Override
     public void restoreBottomNavigation(boolean withAnimation) {
         super.restoreBottomNavigation(withAnimation);
-        if (!withAnimation) setVisibility(View.VISIBLE);
+        if (!withAnimation)
+            setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideBottomNavigation(boolean withAnimation) {
         super.hideBottomNavigation(withAnimation);
-        if (!withAnimation) setVisibility(View.GONE);
+        if (!withAnimation)
+            setVisibility(View.GONE);
     }
 
     public void setText(int index, String text) {
@@ -143,7 +147,8 @@ public class BottomTabs extends AHBottomNavigation {
 
     public void setLayoutDirection(LayoutDirection direction) {
         LinearLayout tabsContainer = findChildByClass(this, LinearLayout.class);
-        if (tabsContainer != null) tabsContainer.setLayoutDirection(direction.get());
+        if (tabsContainer != null)
+            tabsContainer.setLayoutDirection(direction.get());
     }
 
     private boolean hasItemsAndIsMeasured(int w, int h, int oldw, int oldh) {

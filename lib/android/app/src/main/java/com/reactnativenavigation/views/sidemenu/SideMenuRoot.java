@@ -1,7 +1,7 @@
 package com.reactnativenavigation.views.sidemenu;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.content.res.Resources;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -23,15 +23,19 @@ import static com.reactnativenavigation.utils.CoordinatorLayoutUtils.matchParent
 
 public class SideMenuRoot extends CoordinatorLayout {
     private SideMenu sideMenu;
+    private final Activity activity;
 
-    public SideMenuRoot(Context context) {
+    public SideMenuRoot(Activity context) {
         super(context);
+        activity = context;
     }
 
     public void addSideMenu(SideMenu sideMenu, BehaviourAdapter behaviourAdapter) {
         this.sideMenu = sideMenu;
         enableDrawingBehindStatusBar();
         addView(sideMenu, matchParentWithBehaviour(new BehaviourDelegate(behaviourAdapter)));
+        // 允许10%范围内触发滑动
+        DrawerLayoutHelper.INSTANCE.setDrawerLeftEdgeSize(activity, sideMenu, .1f);
     }
 
     public boolean isDrawerOpen(int gravity) {
@@ -66,8 +70,7 @@ public class SideMenuRoot extends CoordinatorLayout {
             width = (int) TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
                     sideMenuOptions.width.get(),
-                    Resources.getSystem().getDisplayMetrics()
-            );
+                    Resources.getSystem().getDisplayMetrics());
         }
         return width;
     }
@@ -75,7 +78,8 @@ public class SideMenuRoot extends CoordinatorLayout {
     private int getHeight(SideMenuOptions sideMenuOptions) {
         int height = MATCH_PARENT;
         if (sideMenuOptions.height.hasValue()) {
-            height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sideMenuOptions.height.get(), Resources.getSystem().getDisplayMetrics());
+            height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sideMenuOptions.height.get(),
+                    Resources.getSystem().getDisplayMetrics());
         }
         return height;
     }

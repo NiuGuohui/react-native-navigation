@@ -33,7 +33,12 @@ type FontWeight =
   | '800'
   | '900'
   | FontWeightIOS;
-export type LayoutOrientation = 'portrait' | 'landscape';
+export type LayoutOrientation =
+  | 'portrait'
+  | 'landscape'
+  | 'sensor'
+  | 'sensorLandscape'
+  | 'sensorPortrait';
 type AndroidDensityNumber = number;
 export type SystemItemIcon =
   | 'done'
@@ -180,6 +185,18 @@ export interface OptionsLayout {
    * #### (iOS specific)
    */
   autoHideHomeIndicator?: boolean;
+
+  /**
+   * Add insets to the top layout
+   */
+  insets?: Insets;
+
+  /**
+   * Resizes the layout when keyboard is visible
+   * @default true
+   * #### (Android specific)
+   */
+  adjustResize?: boolean;
 }
 
 export enum OptionsModalPresentationStyle {
@@ -933,7 +950,7 @@ export interface OptionsBottomTab {
   /**
    * Set the background color of the badge that is overlayed over the component
    */
-  badgeColor?: string;
+  badgeColor?: Color;
   /**
    * Show the badge with the animation.
    * #### (Android specific)

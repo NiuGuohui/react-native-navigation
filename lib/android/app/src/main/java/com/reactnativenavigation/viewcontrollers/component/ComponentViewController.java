@@ -27,18 +27,20 @@ public class ComponentViewController extends ChildController<ComponentLayout> {
     private final ComponentPresenter presenter;
     private final ReactViewCreator viewCreator;
 
-    private enum VisibilityState {Appear, Disappear}
+    private enum VisibilityState {
+        Appear, Disappear
+    }
 
     private VisibilityState lastVisibilityState = VisibilityState.Disappear;
 
     public ComponentViewController(final Activity activity,
-                                   final ChildControllersRegistry childRegistry,
-                                   final String id,
-                                   final String componentName,
-                                   final ReactViewCreator viewCreator,
-                                   final Options initialOptions,
-                                   final Presenter presenter,
-                                   final ComponentPresenter componentPresenter) {
+            final ChildControllersRegistry childRegistry,
+            final String id,
+            final String componentName,
+            final ReactViewCreator viewCreator,
+            final Options initialOptions,
+            final Presenter presenter,
+            final ComponentPresenter componentPresenter) {
         super(activity, childRegistry, id, presenter, initialOptions);
         this.componentName = componentName;
         this.viewCreator = viewCreator;
@@ -47,7 +49,8 @@ public class ComponentViewController extends ChildController<ComponentLayout> {
 
     @Override
     public void start() {
-        if (!isDestroyed()) getView().start();
+        if (!isDestroyed())
+            getView().start();
     }
 
     @Override
@@ -78,15 +81,20 @@ public class ComponentViewController extends ChildController<ComponentLayout> {
         if (view != null)
             view.sendComponentWillStart();
         super.onViewDidAppear();
-        if (view != null && lastVisibilityState == VisibilityState.Disappear) view.sendComponentStart();
+        if (view != null)
+            view.requestApplyInsets();
+        if (view != null && lastVisibilityState == VisibilityState.Disappear)
+            view.sendComponentStart();
         lastVisibilityState = VisibilityState.Appear;
     }
 
     @Override
     public void onViewDisappear() {
-        if(lastVisibilityState == VisibilityState.Disappear)return;
+        if (lastVisibilityState == VisibilityState.Disappear)
+            return;
         lastVisibilityState = VisibilityState.Disappear;
-        if (view != null) view.sendComponentStop();
+        if (view != null)
+            view.sendComponentStop();
         super.onViewDisappear();
     }
 
@@ -97,7 +105,8 @@ public class ComponentViewController extends ChildController<ComponentLayout> {
 
     @Override
     public void applyOptions(Options options) {
-        if (isRoot()) applyTopInset();
+        if (isRoot())
+            applyTopInset();
         super.applyOptions(options);
         getView().applyOptions(options);
         presenter.applyOptions(getView(), resolveCurrentOptions(presenter.defaultOptions));
@@ -117,42 +126,52 @@ public class ComponentViewController extends ChildController<ComponentLayout> {
 
     @Override
     public void mergeOptions(Options options) {
-        if (options == Options.EMPTY) return;
-        if (isViewShown()) presenter.mergeOptions(getView(), options);
+        if (options == Options.EMPTY)
+            return;
+        if (isViewShown())
+            presenter.mergeOptions(getView(), options);
         super.mergeOptions(options);
     }
 
     @Override
     public void applyTopInset() {
-        if (view != null) presenter.applyTopInsets(view, getTopInset());
+        if (view != null)
+            presenter.applyTopInsets(view, getTopInset());
     }
 
     @Override
     public int getTopInset() {
-        int statusBarInset = resolveCurrentOptions(presenter.defaultOptions).statusBar.isHiddenOrDrawBehind() ? 0 : SystemUiUtils.getStatusBarHeight(getActivity());
+        int statusBarInset = resolveCurrentOptions(presenter.defaultOptions).statusBar.isHiddenOrDrawBehind() ? 0
+                : SystemUiUtils.getStatusBarHeight(getActivity());
         final Integer perform = perform(getParentController(), 0, p -> p.getTopInset(this));
         return statusBarInset + perform;
     }
 
     @Override
     public void applyBottomInset() {
-        if (view != null) presenter.applyBottomInset(view, getBottomInset());
+        if (view != null)
+            presenter.applyBottomInset(view, getBottomInset());
     }
 
     @Override
     protected WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat insets) {
-        ViewController<?> viewController = findController(view);
-        if (viewController == null || viewController.getView() == null) return insets;
-        final Insets keyboardInsets = insets.getInsets( WindowInsetsCompat.Type.ime());
-        final Insets systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars() );
-        final int visibleNavBar = resolveCurrentOptions(presenter.defaultOptions).navigationBar.isVisible.isTrueOrUndefined()?1:0;
-        final WindowInsetsCompat finalInsets = new WindowInsetsCompat.Builder().setInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime(),
-                Insets.of(systemBarsInsets.left,
-                        0,
-                        systemBarsInsets.right,
-                        Math.max(visibleNavBar*systemBarsInsets.bottom,keyboardInsets.bottom))
-        ).build();
-        return ViewCompat.onApplyWindowInsets(viewController.getView(), finalInsets);
+        final Insets systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+        int systemWindowInsetTop = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top +
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).top -
+                systemBarsInsets.top;
+        int systemWindowInsetBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom +
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom -
+                systemBarsInsets.bottom;
+
+        WindowInsetsCompat finalInsets = new WindowInsetsCompat.Builder()
+                .setInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime(),
+                        Insets.of(systemBarsInsets.left,
+                                systemWindowInsetTop,
+                                systemBarsInsets.right,
+                                Math.max(systemWindowInsetBottom - getBottomInset(), 0)))
+                .build();
+        ViewCompat.onApplyWindowInsets(view, finalInsets);
+        return insets;
     }
 
     @Override

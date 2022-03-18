@@ -34,7 +34,12 @@ open class StackAnimator @JvmOverloads constructor(
     @VisibleForTesting
     val runningSetRootAnimations: MutableMap<ViewController<*>, AnimatorSet> = HashMap()
 
-    fun cancelPushAnimations() = runningPushAnimations.values.forEach(Animator::cancel)
+    fun cancelPushAnimations() {
+        try {
+          runningPushAnimations.values.forEach(Animator::cancel)
+        } catch (err: ConcurrentModificationException) {
+        }
+    }
 
     open fun isChildInTransition(child: ViewController<*>?): Boolean {
         return runningPushAnimations.containsKey(child) ||

@@ -106,6 +106,10 @@ android {
             dimension "RNN.reactNativeVersion"
             buildConfigField("int", "REACT_NATVE_VERSION_MINOR", "63")
         }
+        reactNative68 {
+            dimension "RNN.reactNativeVersion"
+            buildConfigField("int", "REACT_NATVE_VERSION_MINOR", "68")
+        }
     }
 
     def flavor = resolveFlavor()
@@ -122,7 +126,9 @@ String resolveFlavor() {
     Integer reactNativeMinorComponent = reactNativeVersionComponents[1].toInteger()
     Integer reactNativePatchComponent = reactNativeVersionComponents[2].toInteger()
 
-    if (reactNativeMinorComponent >= 63) {
+    if (reactNativeMinorComponent >= 68) {
+        return "reactNative68"
+    } else if (reactNativeMinorComponent >= 63) {
         return "reactNative63"
     } else if (reactNativeMinorComponent >= 62) {
         return "reactNative62"
@@ -161,17 +167,8 @@ List reactNativeVersionComponents(rnPackageJsonFile) {
     return reactNativeVersion.tokenize('-')[0].tokenize('.')
 }
 
-allprojects { p ->
-    p.afterEvaluate {
-        p.android.compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
-        p.android.compileOptions.targetCompatibility JavaVersion.VERSION_1_8
-    }
-    p.repositories {
-        maven { url "https://jitpack.io" }
-    }
-}
-
 dependencies {
+
     implementation "androidx.core:core-ktx:1.6.0"
     implementation "org.jetbrains.kotlin:$kotlinStdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesCore"
@@ -189,13 +186,15 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'
 
-    // tests
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.robolectric:robolectric:4.7.2"
-    testImplementation 'org.assertj:assertj-core:3.11.1'
-    testImplementation 'org.mockito:mockito-core:4.0.0'
-    testImplementation 'com.squareup.assertj:assertj-android:1.2.0'
-    testImplementation 'org.mockito:mockito-inline:3.4.0'
-    testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    if("Playground".toLowerCase() == rootProject.name.toLowerCase()){
+        // tests only for our playground
+        testImplementation 'junit:junit:4.13.2'
+        testImplementation "org.robolectric:robolectric:4.7.2"
+        testImplementation 'org.assertj:assertj-core:3.11.1'
+        testImplementation 'org.mockito:mockito-core:4.0.0'
+        testImplementation 'com.squareup.assertj:assertj-android:1.2.0'
+        testImplementation 'org.mockito:mockito-inline:3.4.0'
+        testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
+        testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    }
 }

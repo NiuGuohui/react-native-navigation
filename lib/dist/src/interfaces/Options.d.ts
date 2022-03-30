@@ -4,7 +4,7 @@ declare type FontFamily = string;
 declare type FontStyle = 'normal' | 'italic';
 declare type FontWeightIOS = 'normal' | 'ultralight' | 'thin' | 'light' | 'regular' | 'medium' | 'semibold' | 'demibold' | 'extrabold' | 'ultrabold' | 'bold' | 'heavy' | 'black';
 declare type FontWeight = 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900' | FontWeightIOS;
-export declare type LayoutOrientation = 'portrait' | 'landscape';
+export declare type LayoutOrientation = 'portrait' | 'landscape' | 'sensor' | 'sensorLandscape' | 'sensorPortrait';
 declare type AndroidDensityNumber = number;
 export declare type SystemItemIcon = 'done' | 'cancel' | 'edit' | 'save' | 'add' | 'flexibleSpace' | 'fixedSpace' | 'compose' | 'reply' | 'action' | 'organize' | 'bookmarks' | 'search' | 'refresh' | 'stop' | 'camera' | 'trash' | 'play' | 'pause' | 'rewind' | 'fastForward' | 'undo' | 'redo';
 export declare type Interpolation = {
@@ -133,6 +133,16 @@ export interface OptionsLayout {
      * #### (iOS specific)
      */
     autoHideHomeIndicator?: boolean;
+    /**
+     * Add insets to the top layout
+     */
+    insets?: Insets;
+    /**
+     * Resizes the layout when keyboard is visible
+     * @default true
+     * #### (Android specific)
+     */
+    adjustResize?: boolean;
 }
 export declare enum OptionsModalPresentationStyle {
     formSheet = "formSheet",
@@ -852,7 +862,7 @@ export interface OptionsBottomTab {
     /**
      * Set the background color of the badge that is overlayed over the component
      */
-    badgeColor?: string;
+    badgeColor?: Color;
     /**
      * Show the badge with the animation.
      * #### (Android specific)
